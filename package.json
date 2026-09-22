@@ -1,25 +1,13 @@
 {
   "name": "civicconnect",
   "version": "1.0.0",
-  "description": "CivicConnect is a project for SEN381, the project is to design a controlled digital platform that provides a reliable, traceable and usable way to submit, manage, monitor and report on service requests using Software Engineering Concepts",
+  "description": "CivicConnect backend for managing municipal service requests",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Richo-Lab/CivicConnect.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/Richo-Lab/CivicConnect/issues"
-  },
-  "homepage": "https://github.com/Richo-Lab/CivicConnect#readme",
   "dependencies": {
     "express": "^5.2.1"
-  }
+  },
+  "type": "commonjs"
 }
