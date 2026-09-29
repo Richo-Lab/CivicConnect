@@ -7,7 +7,19 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "dotenv": "^18.0.4",
     "express": "^5.2.1"
   },
-  "type": "commonjs"
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Richo-Lab/CivicConnect.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Richo-Lab/CivicConnect/issues"
+  },
+  "homepage": "https://github.com/Richo-Lab/CivicConnect#readme"
 }
