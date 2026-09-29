@@ -1,7 +1,7 @@
 class RequestRepository {
+
     constructor() {
         this.requests = [];
-        this.nextId = 1;
     }
 
     findAll() {
@@ -9,36 +9,39 @@ class RequestRepository {
     }
 
     findById(id) {
-        return this.requests.find(
-            request => request.id === Number(id)
-        );
+        return this.requests.find(r => r.id === Number(id));
     }
 
     save(request) {
         this.requests.push(request);
-        this.nextId++;
-
         return request;
     }
 
-    update(request) {
-        const index =
-            this.requests.findIndex(
-                existingRequest =>
-                    existingRequest.id === request.id
-            );
+    update(id, request) {
 
-        if (index === -1) {
+        const index =
+            this.requests.findIndex(r => r.id === Number(id));
+
+        if (index === -1)
             return null;
-        }
 
         this.requests[index] = request;
 
         return request;
     }
 
-    generateId() {
-        return this.nextId;
+    search(keyword) {
+
+        if (!keyword)
+            return this.requests;
+
+        const query = keyword.toLowerCase();
+
+        return this.requests.filter(r =>
+            r.title.toLowerCase().includes(query) ||
+            r.description.toLowerCase().includes(query) ||
+            r.category.toLowerCase().includes(query)
+        );
     }
 }
 
