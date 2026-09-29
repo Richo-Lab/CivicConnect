@@ -1,28 +1,44 @@
 class RequestController {
+
     constructor(service) {
         this.service = service;
     }
 
     getRequests(req, res) {
-        try {
-            const requests =
-                this.service.getAllRequests();
 
-            res.status(200).json({
-                success: true,
-                count: requests.length,
-                data: requests
-            });
+        const search = req.query.search;
+
+        if (search)
+            return res.json(
+                this.service.searchRequests(search)
+            );
+
+        res.json(
+            this.service.getAllRequests()
+        );
+    }
+
+    getRequest(req, res) {
+
+        try {
+
+            res.json(
+                this.service.getRequestById(req.params.id)
+            );
+
         } catch (error) {
-            res.status(500).json({
-                success: false,
+
+            res.status(404).json({
                 message: error.message
             });
+
         }
     }
 
     createRequest(req, res) {
+
         try {
+
             const {
                 title,
                 description,
@@ -36,77 +52,102 @@ class RequestController {
                     category
                 );
 
-            res.status(201).json({
-                success: true,
-                message:
-                    "Service request created successfully",
-                data: request
-            });
+            res.status(201).json(request);
+
         } catch (error) {
+
             res.status(400).json({
-                success: false,
                 message: error.message
             });
+
         }
     }
 
-    updateRequest(req, res) {
-        try {
-            const {
-                title,
-                description,
-                category
-            } = req.body;
+    assignRequest(req, res) {
 
-            const request =
-                this.service.updateRequest(
+        try {
+
+            res.json(
+                this.service.assignRequest(
                     req.params.id,
-                    title,
-                    description,
-                    category
-                );
+                    req.body.staff
+                )
+            );
 
-            res.status(200).json({
-                success: true,
-                message:
-                    "Service request updated successfully",
-                data: request
-            });
         } catch (error) {
-            if (
-                error.message ===
-                "Service request not found"
-            ) {
-                return res.status(404).json({
-                    success: false,
-                    message: error.message
-                });
-            }
 
-            res.status(400).json({
-                success: false,
+            res.status(404).json({
                 message: error.message
             });
+
         }
     }
 
-    getRequestById(req, res) {
-        try {
-            const request =
-                this.service.getRequestById(
-                    req.params.id
-                );
+    updateStatus(req, res) {
 
-            res.status(200).json({
-                success: true,
-                data: request
-            });
+        try {
+
+            res.json(
+                this.service.updateStatus(
+                    req.params.id,
+                    req.body.status
+                )
+            );
+
         } catch (error) {
+
             res.status(404).json({
-                success: false,
                 message: error.message
             });
+
         }
+    }
+
+    addComment(req, res) {
+
+        try {
+
+            res.json(
+                this.service.addComment(
+                    req.params.id,
+                    req.body.comment
+                )
+            );
+
+        } catch (error) {
+
+            res.status(404).json({
+                message: error.message
+            });
+
+        }
+    }
+
+    resolveRequest(req, res) {
+
+        try {
+
+            res.json(
+                this.service.resolveRequest(
+                    req.params.id,
+                    req.body.resolution
+                )
+            );
+
+        } catch (error) {
+
+            res.status(404).json({
+                message: error.message
+            });
+
+        }
+    }
+
+    getReport(req, res) {
+
+        res.json(
+            this.service.getReport()
+        );
     }
 }
 
