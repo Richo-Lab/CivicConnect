@@ -1,0 +1,13 @@
+{
+  "name": "civicconnect",
+  "version": "1.0.0",
+  "description": "CivicConnect backend for managing municipal service requests",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "type": "commonjs"
+}
