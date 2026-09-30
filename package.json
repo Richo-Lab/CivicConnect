@@ -4,11 +4,14 @@
   "description": "CivicConnect backend for managing municipal service requests",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "jest --verbose"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "dotenv": "^18.0.4",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
   },
   "type": "commonjs",
   "repository": {
@@ -21,5 +24,9 @@
   "bugs": {
     "url": "https://github.com/Richo-Lab/CivicConnect/issues"
   },
-  "homepage": "https://github.com/Richo-Lab/CivicConnect#readme"
+  "homepage": "https://github.com/Richo-Lab/CivicConnect#readme",
+  "devDependencies": {
+    "jest": "^30.5.2",
+    "supertest": "^7.3.0"
+  }
 }
