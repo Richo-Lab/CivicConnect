@@ -1,0 +1,92 @@
+name: CI
+
+# Runs on every push to main and on every Pull Request targeting main.
+# Mark the "build-and-test" and "security" jobs as REQUIRED status checks
+# in the branch protection rule for main so a failure blocks merging.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies (clean, from lockfile)
+        run: npm ci
+
+      - name: Static check - JavaScript syntax
+        run: |
+          find . -name "*.js" \
+            -not -path "./node_modules/*" \
+            -not -path "./coverage/*" \
+            -print0 | xargs -0 -n1 node --check
+
+      - name: Run automated tests with coverage
+        # Test files set their own JWT_SECRET / seed passwords; no real secrets are used.
+        run: npx jest --ci --coverage --verbose
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: ignore
+
+  security:
+    name: security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dependency audit (production deps, fail on high/critical)
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Secrets and repository hygiene check
+        run: |
+          fail=0
+
+          echo "Checking that no .env files are tracked..."
+          if git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v '\.env\.example$'; then
+            echo "::error::A real .env file is tracked in git"
+            fail=1
+          fi
+
+          echo "Checking that node_modules and IDE folders are not tracked..."
+          if git ls-files | grep -E '(^|/)(node_modules|\.vs)/'; then
+            echo "::error::node_modules or .vs files are tracked in git"
+            fail=1
+          fi
+
+          echo "Scanning tracked source for hard-coded credential patterns..."
+          if git grep -nEi -e "(mongodb(\+srv)?://[^ \"']+:[^ \"']+@|AKIA[0-9A-Z]{16}|-----BEGIN (RSA |EC )?PRIVATE KEY-----|ghp_[A-Za-z0-9]{36})" -- '*.js' '*.json' ':!package-lock.json'; then
+            echo "::error::Possible hard-coded credential found"
+            fail=1
+          fi
+
+          exit $fail
