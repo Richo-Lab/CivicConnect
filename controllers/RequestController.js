@@ -1,3 +1,4 @@
+const { visibleRequests } = require("../middleware/requestAccess");
 class RequestController {
     constructor(service) {
         this.service = service;
@@ -20,7 +21,10 @@ class RequestController {
 
     getRequests(req, res) {
         try {
-            const data = this.service.getAllRequests();
+            const data = visibleRequests(
+    this.service.getAllRequests(),
+    req.user
+);
 
             return res.status(200).json({
                 success: true,
@@ -182,7 +186,10 @@ class RequestController {
 
     searchRequests(req, res) {
         try {
-            const data = this.service.search(req.query.term);
+            const data = visibleRequests(
+    this.service.search(req.query.term),
+    req.user
+);
 
             return res.status(200).json({
                 success: true,

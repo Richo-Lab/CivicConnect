@@ -40,6 +40,9 @@ jobs:
       - name: Verify request business rules
         run: npm run test:service
 
+      - name: M4 request ownership regression
+        run: node --test tests/m4-ownership.node.cjs
+        
       - name: Run automated tests with coverage
         # Test files set their own JWT_SECRET / seed passwords; no real secrets are used.
         run: npx jest --ci --coverage --verbose
