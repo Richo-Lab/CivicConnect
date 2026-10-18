@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> – CivicConnect</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">CivicConnect</a>
+  <% if (user) { %>
+    <nav>
+      <a href="/requests">Requests</a>
+      <a href="/requests/new">New request</a>
+      <% if (user.role === 'STAFF' || user.role === 'ADMIN') { %><a href="/report">Report</a><% } %>
+    </nav>
+    <form class="signout" method="post" action="/logout">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <span class="who"><%= user.email %> (<%= user.role %>)</span>
+      <button type="submit" class="link">Sign out</button>
+    </form>
+  <% } %>
+</header>
+<main>
+<% if (flash) { %>
+  <p class="flash flash-<%= flash.type %>" role="status"><%= flash.message %></p>
+<% } %>

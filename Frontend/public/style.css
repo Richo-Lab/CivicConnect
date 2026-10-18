@@ -1,0 +1,260 @@
+:root{ 
+    --bg:#f6f7f9; 
+    --fg:#1b1f24; 
+    --muted:#5b6570; 
+    --brand:#1f4e8c; 
+    --card:#fff; 
+    --line:#d9dee4; 
+}
+
+@media
+(prefers-color-scheme: dark){ 
+    :root{ 
+        --bg:#15181c; 
+        --fg:#e8ebee;
+        --muted:#9aa5b1; 
+        --brand:#6aa6f0; 
+        --card:#1d2227; 
+        --line:#333b44; 
+    } 
+}
+
+
+*{ 
+    box-sizing: border-box; 
+}
+
+body{ 
+    margin: 0; 
+    font: 16px/1.5 system-ui, sans-serif; 
+    background: var(--bg); 
+    color: var(--fg);
+}
+
+a{ 
+    color: var(--brand); 
+}
+
+.topbar{ 
+    display: flex; 
+    gap: 1.25rem; 
+    align-items: center; 
+    flex-wrap: wrap; 
+    padding: .75rem 1.25rem; 
+    background: var(--card); 
+    border-bottom: 1px solid var(--line); 
+}
+
+.brand{ 
+    font-weight: 700; 
+    text-decoration: none; 
+    font-size: 1.15rem; 
+}
+
+nav{ 
+    display: flex; 
+    gap: 1rem; 
+    flex: 1; 
+}
+
+.signout{ 
+    display: flex; 
+    gap: .75rem; 
+    align-items: center; 
+    margin: 0; 
+}
+
+.who, .meta, .hint{ 
+    color: var(--muted); 
+    font-size: .875rem; 
+}
+
+main{
+    max-width: 60rem; 
+    margin: 1.5rem auto; 
+    padding: 0 1.25rem; 
+}
+
+footer{ 
+    text-align: center; 
+    color: var(--muted); 
+    font-size: .8rem; 
+    padding: 2rem 1rem; 
+}
+
+.card{ 
+    background: var(--card); 
+    border: 1px solid var(--line); 
+    border-radius: 8px; 
+    padding: 1rem 1.25rem; 
+    margin: 1rem 0; 
+}
+
+.narrow{ 
+    max-width: 24rem; 
+}
+
+label{ 
+    display: block; 
+    margin: .75rem 0 .25rem; 
+    font-weight: 600; 
+}
+
+input, textarea, button, select{ 
+    font: inherit; 
+}
+
+input, textarea{ 
+    width: 100%; 
+    padding: .5rem .6rem; 
+    border: 1px solid var(--line); 
+    border-radius: 6px; 
+    background: var(--bg); 
+    color: var(--fg); 
+}
+
+button{ 
+    padding: .5rem 1rem; 
+    margin-top: .75rem; 
+    border: 0; 
+    border-radius: 6px; 
+    background: var(--brand); 
+    color: #fff; 
+    cursor: pointer; 
+}
+
+button.link{ 
+    background: none; 
+    color: var(--brand); 
+    padding: 0; 
+    margin: 0; 
+    text-decoration: underline; 
+}
+
+.inline{ 
+    display: flex; 
+    gap: .75rem; 
+    align-items: flex-end; 
+    flex-wrap: wrap; 
+}
+
+.inline label{ 
+    margin: 0; 
+}
+
+.inline input{ 
+    width: 8rem; 
+}
+
+.search{ 
+    display: flex; 
+    gap: .5rem; 
+    align-items: center; 
+    margin-bottom: 1rem; 
+}
+
+.search input{ 
+    flex: 1; 
+}
+
+.search button{ 
+    margin: 0; 
+}
+
+table{ 
+    width: 100%; 
+    border-collapse: collapse; 
+    background: var(--card); 
+    border: 1px solid var(--line); 
+}
+
+th, td{ 
+    text-align: left; 
+    padding: .55rem .75rem; 
+    border-bottom: 1px solid var(--line); 
+}
+
+th{ 
+    font-size: .85rem; 
+    color: var(--muted); }
+
+.badge{ 
+    display: inline-block; 
+    padding: .1rem .55rem; 
+    border-radius: 999px; 
+    font-size: .8rem; 
+    border: 1px solid var(--line); 
+}
+
+.badge-submitted{ 
+    background: #fff3cd; 
+    color: #664d03; 
+}
+
+.badge-in-progress{ 
+    background: #cfe2ff; 
+    color: #052c65; 
+}
+
+.badge-resolved{ 
+    background: #d1e7dd;
+    color: #0a3622; 
+}
+
+.flash{ 
+    padding: .6rem .9rem; 
+    border-radius: 6px; 
+    border: 1px solid; }
+
+.flash-success{ 
+    background: #d1e7dd; 
+    border-color: #a3cfbb; 
+    color: #0a3622; 
+}
+
+.flash-error{ 
+    background: #f8d7da; 
+    border-color: #f1aeb5; 
+    color: #58151c; 
+}
+
+.plain{ 
+    list-style: none; 
+    padding: 0; 
+    margin: 0 0 .5rem; 
+}
+
+
+.plain li{ 
+    padding: .35rem 0; 
+    border-bottom: 1px solid var(--line); 
+}
+
+.stats{ 
+    display: flex; 
+    gap: 1rem; 
+    flex-wrap: wrap; 
+}
+
+.stat{ 
+    background: var(--card); 
+    border: 1px solid var(--line); 
+    border-radius: 8px; 
+    padding: 1rem 1.5rem; 
+    min-width: 9rem; 
+}
+
+.num{ 
+    display: block; 
+    font-size: 2rem; 
+    font-weight: 700; 
+}
+
+.empty{ 
+    color: var(--muted)
+}
+
+.sr-only{ 
+    position: absolute;
+    left: -9999px;
+}

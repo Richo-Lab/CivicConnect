@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+<h1>Submit a service request</h1>
+<% if (typeof error !== 'undefined' && error) { %><p class="flash flash-error" role="alert"><%= error %></p><% } %>
+<form method="post" action="/requests" class="card">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <label for="title">Title</label>
+  <input id="title" name="title" maxlength="120" required value="<%= form.title || '' %>">
+  <label for="category">Category</label>
+  <input id="category" name="category" list="categories" required value="<%= form.category || '' %>">
+  <datalist id="categories">
+    <option value="Roads"><option value="Water"><option value="Electricity"><option value="Waste"><option value="Other">
+  </datalist>
+  <label for="description">Description</label>
+  <textarea id="description" name="description" rows="5" required><%= form.description || '' %></textarea>
+  <button type="submit">Submit request</button>
+</form>
+<%- include('partials/footer') %>
