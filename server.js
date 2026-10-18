@@ -7,7 +7,16 @@ const RequestController = require("./controllers/RequestController");
 const UserRepository = require("./repositories/UserRepository");
 const AuthService = require("./services/AuthService");
 const AuthController = require("./controllers/AuthController");
-const { authenticateToken, authorizeRoles } = require("./middleware/auth");
+
+const {
+    authenticateToken,
+    authorizeRoles
+} = require("./middleware/auth");
+
+// M4: Request ownership and confidentiality protection
+const {
+    requireRequestOwner
+} = require("./middleware/requestAccess");
 
 const app = express();
 app.use(express.json({ limit: "32kb" }));
@@ -20,6 +29,7 @@ const authController = new AuthController(
 );
 
 const repository = new RequestRepository();
+
 const controller = new RequestController(
     new RequestService(repository, userRepository)
 );
@@ -28,13 +38,21 @@ const loggedIn = authenticateToken;
 const anyRole = authorizeRoles("CITIZEN", "STAFF", "ADMIN");
 const workerRole = authorizeRoles("STAFF", "ADMIN");
 
+// M4: Citizens may access only their own requests.
+// STAFF and ADMIN retain authorised management access.
+const ownRequest = requireRequestOwner(repository);
+
+// API health endpoint
 app.get("/", (req, res) =>
     res.status(200).json({
         message: "CivicConnect API is running"
     })
 );
 
-// Authentication
+// ============================================
+// AUTHENTICATION
+// ============================================
+
 app.post(
     "/api/auth/login",
     authController.login.bind(authController)
@@ -46,7 +64,10 @@ app.get(
     authController.me.bind(authController)
 );
 
-// Request listing and creation
+// ============================================
+// REQUEST LISTING AND CREATION
+// ============================================
+
 app.get(
     "/api/requests",
     loggedIn,
@@ -61,7 +82,11 @@ app.post(
     controller.createRequest.bind(controller)
 );
 
-// Search and report routes must be before /:id
+// ============================================
+// SEARCH AND REPORTING
+// These must appear before /api/requests/:id
+// ============================================
+
 app.get(
     "/api/requests/search",
     loggedIn,
@@ -76,14 +101,20 @@ app.get(
     controller.getReport.bind(controller)
 );
 
-// Request details and editing
+// ============================================
+// REQUEST DETAILS AND EDITING
+// ============================================
+
+// M4: Ownership verification before showing details
 app.get(
     "/api/requests/:id",
     loggedIn,
     anyRole,
+    ownRequest,
     controller.getRequestById.bind(controller)
 );
 
+// Only STAFF and ADMIN can edit request details
 app.put(
     "/api/requests/:id",
     loggedIn,
@@ -91,7 +122,10 @@ app.put(
     controller.updateRequest.bind(controller)
 );
 
-// Assignment and status management
+// ============================================
+// ASSIGNMENT AND STATUS MANAGEMENT
+// ============================================
+
 app.patch(
     "/api/requests/:id/assignment",
     loggedIn,
@@ -113,28 +147,46 @@ app.patch(
     controller.resolveRequest.bind(controller)
 );
 
-// Comments
+// ============================================
+// REQUEST COMMENTS
+// ============================================
+
+// M4: Prevent citizens from commenting on
+// requests belonging to another citizen
 app.post(
     "/api/requests/:id/comments",
     loggedIn,
     anyRole,
+    ownRequest,
     controller.addComment.bind(controller)
 );
 
+// M4: Protect request comment confidentiality
 app.get(
     "/api/requests/:id/comments",
     loggedIn,
     anyRole,
+    ownRequest,
     controller.getComments.bind(controller)
 );
 
-// Status history
+// ============================================
+// REQUEST STATUS HISTORY
+// ============================================
+
+// M4: Protect request history from
+// unauthorised citizen access
 app.get(
     "/api/requests/:id/history",
     loggedIn,
     anyRole,
+    ownRequest,
     controller.getHistory.bind(controller)
 );
+
+// ============================================
+// ERROR HANDLING
+// ============================================
 
 // Handle invalid JSON
 app.use((error, req, res, next) => {
@@ -159,11 +211,17 @@ app.use((error, req, res, next) => {
     return next(error);
 });
 
+// ============================================
+// SERVER STARTUP
+// ============================================
+
 const PORT = process.env.PORT || 3000;
 
 if (require.main === module) {
     app.listen(PORT, () => {
-        console.log(`CivicConnect server running on port ${PORT}`);
+        console.log(
+            `CivicConnect server running on port ${PORT}`
+        );
     });
 }
 
