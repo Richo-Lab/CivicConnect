@@ -1,3 +1,4 @@
+
 name: CI
 
 # Runs on every push to main and on every Pull Request targeting main.
@@ -35,6 +36,9 @@ jobs:
             -not -path "./node_modules/*" \
             -not -path "./coverage/*" \
             -print0 | xargs -0 -n1 node --check
+
+      - name: Verify request business rules
+        run: npm run test:service
 
       - name: Run automated tests with coverage
         # Test files set their own JWT_SECRET / seed passwords; no real secrets are used.

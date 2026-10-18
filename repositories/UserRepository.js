@@ -26,7 +26,13 @@ class UserRepository {
         this.users.push(user);
         return user;
     }
-
+    
+    findById(id) {
+        return this.users.find(
+            user => user.id === Number(id)
+        );
+    }
+    
     findByEmail(email) {
         if (typeof email !== "string") return undefined;
         return this.users.find(u => u.email === email.trim().toLowerCase());

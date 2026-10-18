@@ -4,9 +4,10 @@
   "description": "CivicConnect backend for managing municipal service requests",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "jest --verbose"
-  },
+  "start": "node server.js",
+  "test": "jest --verbose",
+  "test:service": "node --test tests/request-service.node.cjs"
+},
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "dotenv": "^18.0.4",
