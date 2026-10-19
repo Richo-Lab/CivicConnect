@@ -47,13 +47,11 @@ app.use(
 
 // ---------------------------------------------------------------- helpers
 
-app.locals.fmtDate = value => { 
+app.locals.fmtDate = value => 
     value ? new Date(value).toLocaleString("en-ZA", { dateStyle: "medium", timeStyle: "short" }) : "-";
-}
 
-app.locals.badge = status =>{
+app.locals.badge = status =>
     `badge badge-${String(status).replace(/\s+/g, "-").toLowerCase()}`;
-}
 
 // Per-session CSRF token, checked on every POST.
 app.use((req, res, next) => {
