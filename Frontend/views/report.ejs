@@ -1,0 +1,9 @@
+<%- include('partials/header') %>
+<h1>Management report</h1>
+<div class="stats">
+  <div class="stat"><span class="num"><%= report.total %></span>Total requests</div>
+  <% Object.entries(report.byStatus).forEach(([status, count]) => { %>
+    <div class="stat"><span class="num"><%= count %></span><span class="<%= badge(status) %>"><%= status %></span></div>
+  <% }) %>
+</div>
+<%- include('partials/footer') %>

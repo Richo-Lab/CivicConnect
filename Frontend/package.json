@@ -1,0 +1,17 @@
+{
+  "name": "civicconnect-frontend",
+  "version": "1.0.0",
+  "description": "Server-rendered (Express + EJS) web client for the CivicConnect API",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.8",
+    "ejs": "^7.0.2",
+    "express": "^5.3.0",
+    "express-session": "^1.19.0"
+  }
+}
