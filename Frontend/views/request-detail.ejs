@@ -1,0 +1,60 @@
+<%- include('partials/header') %>
+<p><a href="/requests">&larr; All requests</a></p>
+<h1>#<%= request.id %> <%= request.title %></h1>
+<p><span class="<%= badge(request.status) %>"><%= request.status %></span>
+   &nbsp;Category: <strong><%= request.category %></strong>
+   &nbsp;Assigned to: <strong><%= request.assignedTo ? 'User ' + request.assignedTo : 'nobody yet' %></strong></p>
+<div class="card"><p><%= request.description %></p>
+  <p class="meta">Created <%= fmtDate(request.createdAt) %> by user <%= request.createdBy %><% if (request.resolvedAt) { %> · Resolved <%= fmtDate(request.resolvedAt) %><% } %></p></div>
+
+<% if (canManage && request.status !== 'Resolved') { %>
+<section class="card">
+  <h2>Manage</h2>
+  <form method="post" action="/requests/<%= request.id %>/assign" class="inline">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label for="assignedTo">Assign to user ID</label>
+    <input id="assignedTo" name="assignedTo" type="number" min="1" required value="<%= request.assignedTo || '' %>">
+    <button type="submit">Assign</button>
+  </form>
+  <p class="hint">Demo seed order: 1 = admin, 2 = staff. (The API has no user-list endpoint yet.)</p>
+  <% if (request.status === 'Submitted') { %>
+  <form method="post" action="/requests/<%= request.id %>/status" class="inline">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <input type="hidden" name="status" value="In Progress">
+    <button type="submit">Start work (In Progress)</button>
+  </form>
+  <% } %>
+  <% if (request.status === 'In Progress') { %>
+  <form method="post" action="/requests/<%= request.id %>/resolve" class="inline">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <button type="submit">Resolve request</button>
+  </form>
+  <% } %>
+</section>
+<% } %>
+
+<section class="card">
+  <h2>Comments (<%= comments.length %>)</h2>
+  <% if (comments.length === 0) { %><p class="empty">No comments yet.</p><% } %>
+  <ul class="plain">
+  <% comments.forEach(c => { %>
+    <li><%= c.comment || c.text %> <span class="meta">– user <%= c.by %>, <%= fmtDate(c.at) %></span></li>
+  <% }) %>
+  </ul>
+  <form method="post" action="/requests/<%= request.id %>/comments">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label for="comment">Add a comment</label>
+    <textarea id="comment" name="comment" rows="3" maxlength="1000" required></textarea>
+    <button type="submit">Add comment</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Status history</h2>
+  <ol class="plain">
+  <% history.forEach(h => { %>
+    <li><%= h.from ? h.from + ' → ' : '' %><strong><%= h.to %></strong> <span class="meta">– user <%= h.by %>, <%= fmtDate(h.at) %></span></li>
+  <% }) %>
+  </ol>
+</section>
+<%- include('partials/footer') %>
